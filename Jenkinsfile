@@ -4,14 +4,13 @@ pipeline {
     stages {
         stage('Checkout SCM') {
             steps {
-                git 'https://github.com/AreebAbdulGhani/Areeb-DevOps-UNBOXROBOTICS-LABS.git'
+                git branch: 'main', url: 'https://github.com/AreebAbdulGhani/Areeb-DevOps-UNBOXROBOTICS-LABS.git'
             }
         }
 
         stage('Deploy with ArgoCD') {
             steps {
                 script {
-                    
                     sh '''
                         docker run --rm -v $HOME/.kube:/root/.kube argoproj/argocd:latest argocd app create devops-log-pipeline \
                             --repo https://github.com/AreebAbdulGhani/Areeb-DevOps-UNBOXROBOTICS-LABS.git \
@@ -21,7 +20,6 @@ pipeline {
                             --server host.docker.internal:8081 || true
                     '''
 
-                    
                     sh '''
                         docker run --rm -v $HOME/.kube:/root/.kube argoproj/argocd:latest argocd app sync devops-log-pipeline \
                             --server host.docker.internal:8081
